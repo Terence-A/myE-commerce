@@ -3,106 +3,71 @@ const { Category, Product } = require("../../models");
 
 // The `/api/categories` endpoint
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   // find all categories
   // be sure to include its associated Products
-  Category.findAll({
-    include: {
-      model: Product,
-      attributes: ["id", "product_name", "price", "stock", "category_name"],
-    },
-  }).then((categoryData) => {
-    if (!categoryData) {
-      res.status(404).json({ message: "No categories found!" });
-      return;
-    }
-    res.status(200).json(categoryData);
-  });
+  try {
+    const categories = await Category.findAll({
+      include: Product,
+    });
+    res.json(categories);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   // find one category by its `id` value
   // be sure to include its associated Products
-  Category.findOne({
-    where: {
-      id: req.params.id,
-    },
-    include: {
-      model: Product,
-      attributes: ["id", "product_name", "price", "stock", "category_id"],
-    },
-  })
-    .then((categoryData) => {
-      if (!categoryData) {
-        res.status(404).json({ message: "No categories found!" });
-        return;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
+  try {
+    const category = await Category.findByPk(req.params.id, {
+      include: Product,
     });
+    !category
+      ? res.status(404).json({
+          message:
+            "Oops! I did it again. I played with your heart, got lost in the route, because there is no category!",
+        })
+      : res.json(category);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.post("/", (req, res) => {
-  // create a new category
-  Category.create({
-    category_name: req.body.category_name,
-  })
-    .then((categoryData) => {
-      res.json(categoryData);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+// Create a new category by id
+router.get("/:id", (req, res) => {
+  Category.findOne({ where: { id: req.params.id }, include: [Product] })
+    .then((categoryData) => res.status(200).json(categoryData))
+    .catch((err) => res.status(400).json(err));
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   // update a category by its `id` value
-  Category.update(
-    {
-      category_name: req.body.category_name,
-    },
-    {
-      where: {
-        id: req.params.id,
-      },
+  try {
+    const category = await Category.findByPk(req.params.id);
+    if (!category) {
+      return res.status(404).json({ message: "No category found!" });
     }
-  )
-    .then((categoryData) => {
-      if (!categoryData) {
-        res
-          .status(404)
-          .json({ message: "Sorry, no category found with this id." });
-        return;
-      }
-      res.json(categoryData);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+    await category.update(req.body);
+    res.json(category);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete a category by its `id` value
-  Category.destroy({
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then((categoryData) => {
-      if (!categoryData) {
-        res
-          .status(404)
-          .json({ message: "Sorry, no category found with this id" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+  try {
+    const category = await Category.findByPk(req.params.id);
+    if (!category) {
+      return res.status(404).json({ message: "No category found!" });
+    }
+    await category.destroy(req.body);
+    res.json({ message: "Category deleted." });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
