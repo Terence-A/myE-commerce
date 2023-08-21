@@ -26,8 +26,7 @@ router.get("/:id", async (req, res) => {
     });
     !category
       ? res.status(404).json({
-          message:
-            "Oops! I did it again. I played with your heart, got lost in the route, because there is no category!",
+          message: "Sorry, not found!",
         })
       : res.json(category);
   } catch (err) {
@@ -36,10 +35,13 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create a new category by id
-router.get("/:id", (req, res) => {
-  Category.findOne({ where: { id: req.params.id }, include: [Product] })
-    .then((categoryData) => res.status(200).json(categoryData))
-    .catch((err) => res.status(400).json(err));
+router.post("/", async (req, res) => {
+  try {
+    const category = await Category.create(req.body);
+    res.json(category);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.put("/:id", async (req, res) => {
