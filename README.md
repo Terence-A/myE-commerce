@@ -30,6 +30,12 @@ Comprehensive testing of API POST, PUT, and DELETE routes in Insomnia Core will 
 
 ## Screenshots
 
+![Alt text](image.png)
+
+![Alt text](image-1.png)
+
+![Alt text](image-2.png)
+
 ## Installation
 
 Follow these steps to install and run the E-Commerce Back End project:
