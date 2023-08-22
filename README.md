@@ -48,7 +48,7 @@ Follow these steps to install and run the E-Commerce Back End project:
 
 4. Create a .env file and provide your database name, MySQL username, and MySQL password in the specified format:
 
-- DB_NAME=your_database_name
+- DB_NAME=ecommerce_db.category
 - DB_USER=your_mysql_username
 - DB_PASSWORD=your_mysql_password
 
