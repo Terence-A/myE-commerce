@@ -62,6 +62,10 @@ Follow these steps to install and run the E-Commerce Back End project:
 
 Once the server is running, use tools such as Insomnia or Postman to test the API routes. The available routes enable the management of categories, products, and tags, allowing you to perform actions like data creation, updates, and deletions via the API.
 
+## Demonstration Video
+
+https://drive.google.com/file/d/1BTyvfyUaDI5jxGhhYCHJY-7Na5jP5Kq3/view?usp=drive_link
+
 ## License
 
 This project is licensed under the MIT License.
